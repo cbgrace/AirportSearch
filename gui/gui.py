@@ -184,11 +184,19 @@ class AirportForm(tk.Tk):
             messagebox.showinfo('Error', 'Unable export data.')
 
     def show_all_onclick(self):
+        """
+        handles click event for the 'show all' button
+        :return: n/a
+        """
         b.retrieve_airport_data(self)
         self.export_button.config(state='normal')
         self.update_all()
 
     def get_search_params(self):
+        """
+        builds a dict of search parameters that the user selects/inputs
+        :return: a dict of search parameters from the gui (or if there is some validation error, returns nothing)
+        """
         # build the search params with a builder...
         builder = b.AirportSearchBuilder()
         # go through each entry one by one and if there is anything in it, add it to the builder
@@ -259,6 +267,10 @@ class AirportForm(tk.Tk):
         return builder.build()
 
     def filter_airport_results(self):
+        """
+        filters a list of airport objects by checking for matches to the user's search parameters
+        :return: a list of airport objects that match
+        """
         results = []  # blank list to store results
         params = self.get_search_params()  # build search parameters into a dict
         for item in self.airport_list:

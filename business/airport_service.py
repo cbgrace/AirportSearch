@@ -1,5 +1,4 @@
 import dal
-import gui
 import time
 from exceptions import DalException, BusinessLogicException
 from logging_config import get_logger
@@ -24,7 +23,6 @@ def process_response(response, tk_instance):
             except BusinessLogicException:
                 raise
         logger.info('returning list of airport objects')
-        time.sleep(5)
         tk_instance.after(0, tk_instance.set_airport_list, airport_list)
         tk_instance.after(0, tk_instance.update_results)
     else:
@@ -57,6 +55,11 @@ def write_results_to_txt(results):
 
 
 def parse_line(line):
+    """
+    parses a csv-like line into tokens
+    :param line: line to be parsed
+    :return: tokens from a csv line
+    """
     try:
         line = line.decode('utf-8')
         fake_csv = StringIO(line)
@@ -69,6 +72,7 @@ def parse_line(line):
 
 
 class AirportSearchBuilder:
+
     def __init__(self):
         self._params = {}
 
@@ -76,9 +80,19 @@ class AirportSearchBuilder:
         return ''.join(f"{key}, {value}\n" for key, value in self._params.items())
 
     def with_param(self, param_name, param_value):
+        """
+        adds a search parameter to the dict contained in self._params
+        :param param_name: key
+        :param param_value: value
+        :return: self
+        """
         self._params[param_name] = param_value
         return self
 
     def build(self):
+        """
+        returns self._params
+        :return: dictionary of search parameters
+        """
         return self._params
 

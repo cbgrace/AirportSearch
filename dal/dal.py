@@ -1,10 +1,6 @@
-import concurrent.futures
 import requests
 from exceptions import DalException
 from logging_config import get_logger
-
-# since I am only getting data from one source, I don't think I need any abstract classes...
-# I do, however, need to add error handling
 
 logger = get_logger(__name__)
 
