@@ -4,7 +4,6 @@ from tkinter import ttk, messagebox
 import business as b
 import validation
 from exceptions import BusinessLogicException
-from models import Airport
 
 
 COUNTRY_LIST = ['ALL', 'Afghanistan', 'Albania', 'Algeria', 'American Samoa', 'Angola', 'Anguilla', 'Antarctica',
