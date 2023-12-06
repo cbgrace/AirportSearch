@@ -6,6 +6,48 @@ import validation
 from exceptions import BusinessLogicException
 
 
+"""
+In this module we have a class, AirportForm, that creates a gui for the user to interact with in order to search 
+for airports based on various parameters.
+
+Methods:
+--------
+    create_widgets(self):
+        Creates the widgets in the GUI form AirportForm
+    search_onclick(self):
+        handles the click event for the search button
+    clear_onclick(self):
+        handles the click event for the clear button
+    export_onclick(self):
+        passes the contents of the results text to a method which will export them to results_export.txt
+    show_all_onclick(self):
+        handles click event for the 'show all' button
+    get_search_params(self):
+        builds a dict of search parameters that the user selects/inputs
+    filter_airport_results(self):
+        filters a list of airport objects by checking for matches to the user's search parameters
+    update_results(self):
+        updates the GUI with results from a search
+    update_all(self):
+        updates the GUI with results if user selects "update all"
+    display_error(self, message):
+        displays an error message
+    update_text(self, message):
+        Updates results_text with a given message
+    validation_error_message(self, entry):
+        displays error message if there is a validation issue with the search parameters
+    on_close(self):
+        shuts down the executor if the gui is closed
+    set_airport_list(cls, list_to_set):
+        used to update the airport list from outside of this class
+        
+Constants:
+----------
+    COUNTRY_LIST: list of countries to select from (pulled from website provided in assignment)
+    DST_LIST: list of DST options pulled from website provided in assignment
+"""
+
+
 COUNTRY_LIST = ['ALL', 'Afghanistan', 'Albania', 'Algeria', 'American Samoa', 'Angola', 'Anguilla', 'Antarctica',
                 'Antigua and Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Ashmore and Cartier Islands', 'Australia',
                 'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Baker Island', 'Bangladesh', 'Barbados', 'Belarus',
@@ -139,11 +181,13 @@ class AirportForm(tk.Tk):
     def search_onclick(self):
         """
         handles the click event for the search button
-        :return:
+        :return: n/a
         """
-        b.retrieve_airport_data(self)
-        self.export_button.config(state='normal')
-        # self.update_results()
+        try:
+            b.retrieve_airport_data(self)
+            self.export_button.config(state='normal')
+        except BusinessLogicException as e:
+            self.display_error(f"Some error occurred: {e}")
 
     def clear_onclick(self):
         """
@@ -164,6 +208,7 @@ class AirportForm(tk.Tk):
         self.results_text.delete('1.0', tk.END)
         self.results_text.config(state='disabled')
         self.export_button.config(state='disabled')
+        self.number_of_results_label.config(text="Number of Results: 0")
 
     def export_onclick(self):
         """
@@ -187,9 +232,11 @@ class AirportForm(tk.Tk):
         handles click event for the 'show all' button
         :return: n/a
         """
-        b.retrieve_airport_data(self)
-        self.export_button.config(state='normal')
-        self.update_all()
+        try:
+            b.retrieve_airport_data(self, True)
+            self.export_button.config(state='normal')
+        except BusinessLogicException as e:
+            self.display_error(f"Some error occurred: {e}")
 
     def get_search_params(self):
         """
@@ -278,16 +325,29 @@ class AirportForm(tk.Tk):
         return results
 
     def update_results(self):
+        """
+        updates the GUI with results from a search
+        :return: n/a
+        """
         results = self.filter_airport_results()
         self.update_text(''.join(f"{airport}\n" for airport in results))
         self.number_of_results_label.config(text=f"Number of Results: {len(results)}")
 
     def update_all(self):
+        """
+        updates the GUI with results if user selects "update all"
+        :return:
+        """
         results = self.airport_list
         self.update_text(''.join(f"{airport}\n" for airport in results))
         self.number_of_results_label.config(text=f"Number of Results: {len(results)}")
 
     def display_error(self, message):
+        """
+        displays an error message
+        :param message: what you want show the user
+        :return: messagebox with error message
+        """
         return messagebox.showinfo('Error', f"{message}")
 
     def update_text(self, message):
@@ -302,13 +362,27 @@ class AirportForm(tk.Tk):
         self.results_text.config(state='disabled')
 
     def validation_error_message(self, entry):
+        """
+        displays error message if there is a validation issue with the search parameters
+        :param entry: the field where the validation error has occurred
+        :return: messagebox with error message
+        """
         return messagebox.showinfo('Error', f'Invalid entry in the {entry} field.')
 
     def on_close(self):
+        """
+        shuts down the executor if the gui is closed
+        :return: n/a
+        """
         self.executor.shutdown(wait=False)
         self.destroy()
 
     @classmethod
     def set_airport_list(cls, list_to_set):
+        """
+        used to update the airport list from outside of this class
+        :param list_to_set: list of airport objects
+        :return: n/a
+        """
         cls.airport_list = list_to_set
 

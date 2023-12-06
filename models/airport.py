@@ -1,3 +1,14 @@
+"""
+This module contains a single class to model airport data
+
+Methods:
+--------
+    check_for_match(self, param_dict):
+        checks this current airport object for matches to the provided param_dict.
+    convert_dst_value(self, value):
+        converts the dst value from the gui (full words) to the single-letter values from the data
+"""
+
 class Airport:
     def __init__(self, airport_id, airport_name, city_name, country_name, iata_code, icao_code, latitude, longitude,
                  elevation, utc_offset, dst_area):
@@ -25,6 +36,11 @@ class Airport:
         return f"{self._airport_name} ({self._iata_code}), {self._country_name}"
 
     def check_for_match(self, param_dict):
+        """
+        checks this current airport object for matches to the provided param_dict.
+        :param param_dict: a dictionary of search parameters from the GUI
+        :return: returns True if all submitted fields are a match, false if not
+        """
         number_of_matches_needed = len(param_dict.keys())
         number_of_matches = 0
         if 'airport_name' in param_dict.keys():
@@ -57,8 +73,8 @@ class Airport:
                 number_of_matches += 2
         if 'elevation' in param_dict.keys():
             # I had no idea what to do with elevation???
-            if int(param_dict['elevation']) < int(self._elevation):
-                number_of_matches += 1  # return True
+            if int(param_dict['elevation']) <= int(self._elevation):
+                number_of_matches += 1
         if "dst_area" in param_dict.keys():
             value = self.convert_dst_value(param_dict['dst_area'])
             if value == self._dst_area:
@@ -69,6 +85,11 @@ class Airport:
             return False
 
     def convert_dst_value(self, value):
+        """
+        converts the dst value from the gui (full words) to the single-letter values from the data
+        :param value: dst value from the dropdown in the gui
+        :return: the single-letter equivalent for the provided dst value.
+        """
         if value == 'European':
             return 'E'
         elif value == 'US/Canada':

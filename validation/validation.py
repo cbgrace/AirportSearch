@@ -1,10 +1,42 @@
 """
-Also need to validate that if longitude is filled in, lat is as well, and vise-versa...
+This module contains various functions to evaluate user entries from the gui layer.
+
+Methods:
+--------
+    validate_iata(value):
+        validates the IATA code from the GUI
+    validate_icao(value):
+        validates the ICAO code from the GUI
+    validate_is_alpha(value):
+        validates whether a given value contains only letters
+    is_float(value):
+        determines if a user's input is a float
+    is_positive_int(value):
+        determines if a value is a positive integer
+    validate_utc(value):
+        validates the UTC entry from the gui
+
+Constants:
+----------
+    IATA_CODE_LENGTH: the length of a IATA code
+    ICAO_CODE_LENGTH: the length of a ICAO code
+    MINIMUM_UTC: the minimum UTC value
+    MAXIMUM_UTC: the maximum UTC value
 """
+
+IATA_CODE_LENGTH = 3
+ICAO_CODE_LENGTH = 4
+MINIMUM_UTC = -12
+MAXIMUM_UTC = 14
 
 
 def validate_iata(value):
-    if len(value) != 3:
+    """
+    validates the IATA code from the GUI
+    :param value: value to assess
+    :return: False if invalid, true if valid
+    """
+    if len(value) != IATA_CODE_LENGTH:
         return False
     if not validate_is_alpha(value):
         return False
@@ -13,7 +45,12 @@ def validate_iata(value):
 
 
 def validate_icao(value):
-    if len(value) != 4:
+    """
+    validates the ICAO code from the GUI
+    :param value: value to assess
+    :return: True if valid, false if not
+    """
+    if len(value) != ICAO_CODE_LENGTH:
         return False
     if not validate_is_alpha(value):
         return False
@@ -63,11 +100,16 @@ def is_positive_int(value):
 
 
 def validate_utc(value):
+    """
+    validates the UTC entry from the gui
+    :param value: value to assess
+    :return: True if valid, false if not
+    """
     # check to make sure it's a number (is_float will work best since it can be negative)
     if not is_float(value):
         return False
     # this min/max value is from wikipedia
-    if -12 <= int(value) <= 14:
+    if MINIMUM_UTC <= int(value) <= MAXIMUM_UTC:
         return True
     else:
         return False
