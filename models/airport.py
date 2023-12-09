@@ -9,6 +9,7 @@ Methods:
         converts the dst value from the gui (full words) to the single-letter values from the data
 """
 
+
 class Airport:
     def __init__(self, airport_id, airport_name, city_name, country_name, iata_code, icao_code, latitude, longitude,
                  elevation, utc_offset, dst_area):

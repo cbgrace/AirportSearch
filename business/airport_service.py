@@ -107,7 +107,7 @@ def parse_line(line):
         reader = csv.reader(fake_csv)
         tokens = next(reader)
         return tokens
-    except Exception:
+    except Exception:  # TODO look into replacing this with something more specific.
         logger.error('Error parsing line with csv reader')
         raise BusinessLogicException
 
